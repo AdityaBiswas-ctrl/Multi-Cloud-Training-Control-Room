@@ -1,0 +1,105 @@
+{
+  "routing": {
+    "max_failovers": 2,
+    "cost_weight": 0.65,
+    "health_weight": 0.2,
+    "capacity_weight": 0.1,
+    "region_weight": 0.05
+  },
+  "providers": [
+    {
+      "name": "aws",
+      "mode": "simulation",
+      "regions": ["us-east-1", "eu-west-1"],
+      "cost_per_gpu_hour": 4.2,
+      "egress_cost_per_gb": 0.03,
+      "startup_minutes": 6,
+      "health_score": 0.93,
+      "capacity_score": 0.86,
+      "latency_score": 0.88,
+      "spot_discount": 0.15,
+      "planned_outcomes": ["capacity", "success"],
+      "metadata": {
+        "instance_type": "ml.g5.2xlarge"
+      }
+    },
+    {
+      "name": "gcp",
+      "mode": "simulation",
+      "regions": ["us-central1", "europe-west4"],
+      "cost_per_gpu_hour": 3.8,
+      "egress_cost_per_gb": 0.025,
+      "startup_minutes": 4,
+      "health_score": 0.96,
+      "capacity_score": 0.9,
+      "latency_score": 0.91,
+      "spot_discount": 0.1,
+      "planned_outcomes": ["success"],
+      "metadata": {
+        "machine_type": "g2-standard-8"
+      }
+    },
+    {
+      "name": "azure",
+      "mode": "simulation",
+      "regions": ["eastus", "westeurope"],
+      "cost_per_gpu_hour": 4.05,
+      "egress_cost_per_gb": 0.028,
+      "startup_minutes": 5,
+      "health_score": 0.9,
+      "capacity_score": 0.84,
+      "latency_score": 0.89,
+      "spot_discount": 0.12,
+      "planned_outcomes": ["success"],
+      "metadata": {
+        "compute_name": "gpu-cluster"
+      }
+    }
+  ],
+  "jobs": [
+    {
+      "job_id": "fraud-detector-v1",
+      "model_name": "fraud-detector",
+      "framework": "pytorch",
+      "entrypoint": "train.py",
+      "dataset_uri": "s3://example-datasets/fraud/training.parquet",
+      "artifact_uri": "gs://example-artifacts/models",
+      "dataset_size_gb": 120,
+      "expected_gpu_hours": 6,
+      "gpu_count": 2,
+      "gpu_type": "nvidia-l4",
+      "max_budget_usd": 60,
+      "preferred_regions": ["us-central1", "us-east-1"],
+      "hyperparameters": {
+        "learning_rate": 0.0003,
+        "batch_size": 256
+      },
+      "tags": {
+        "team": "ml-platform",
+        "env": "dev"
+      }
+    },
+    {
+      "job_id": "recommender-v2",
+      "model_name": "recommender",
+      "framework": "xgboost",
+      "entrypoint": "train_xgb.py",
+      "dataset_uri": "azure://datasets/reco/train.csv",
+      "artifact_uri": "azure://artifacts/reco",
+      "dataset_size_gb": 40,
+      "expected_gpu_hours": 3.5,
+      "gpu_count": 1,
+      "gpu_type": "nvidia-t4",
+      "max_budget_usd": 20,
+      "preferred_regions": ["eastus", "us-central1"],
+      "hyperparameters": {
+        "max_depth": 10,
+        "eta": 0.1
+      },
+      "tags": {
+        "team": "ranking",
+        "env": "dev"
+      }
+    }
+  ]
+}
