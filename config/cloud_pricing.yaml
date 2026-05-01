@@ -1,0 +1,136 @@
+# ============================================================
+# Cloud ML Training Pricing Reference (USD/hour)
+# Updated: 2026-04 — Approximate on-demand pricing
+# ============================================================
+
+aws:
+  name: "Amazon Web Services (SageMaker)"
+  region: "us-east-1"
+  instances:
+    ml.m5.xlarge:
+      vcpu: 4
+      memory_gb: 16
+      gpu: null
+      on_demand: 0.23
+      spot: 0.08
+    ml.m5.4xlarge:
+      vcpu: 16
+      memory_gb: 64
+      gpu: null
+      on_demand: 0.92
+      spot: 0.32
+    ml.p3.2xlarge:
+      vcpu: 8
+      memory_gb: 61
+      gpu: "V100"
+      on_demand: 3.825
+      spot: 1.15
+    ml.g5.xlarge:
+      vcpu: 4
+      memory_gb: 16
+      gpu: "A10G"
+      on_demand: 1.41
+      spot: 0.50
+    ml.g5.2xlarge:
+      vcpu: 8
+      memory_gb: 32
+      gpu: "A10G"
+      on_demand: 1.52
+      spot: 0.53
+
+gcp:
+  name: "Google Cloud Platform (Vertex AI)"
+  region: "us-central1"
+  instances:
+    n1-standard-4:
+      vcpu: 4
+      memory_gb: 15
+      gpu: null
+      on_demand: 0.19
+      preemptible: 0.04
+    n1-standard-16:
+      vcpu: 16
+      memory_gb: 60
+      gpu: null
+      on_demand: 0.76
+      preemptible: 0.16
+    n1-standard-8-v100:
+      vcpu: 8
+      memory_gb: 30
+      gpu: "V100"
+      on_demand: 2.95
+      preemptible: 0.89
+    n1-standard-4-t4:
+      vcpu: 4
+      memory_gb: 15
+      gpu: "T4"
+      on_demand: 0.54
+      preemptible: 0.18
+    a2-highgpu-1g:
+      vcpu: 12
+      memory_gb: 85
+      gpu: "A100"
+      on_demand: 3.67
+      preemptible: 1.10
+
+azure:
+  name: "Microsoft Azure (Azure ML)"
+  region: "eastus"
+  instances:
+    Standard_DS3_v2:
+      vcpu: 4
+      memory_gb: 14
+      gpu: null
+      on_demand: 0.29
+      spot: 0.06
+    Standard_DS12_v2:
+      vcpu: 4
+      memory_gb: 28
+      gpu: null
+      on_demand: 0.37
+      spot: 0.07
+    Standard_NC6s_v3:
+      vcpu: 6
+      memory_gb: 112
+      gpu: "V100"
+      on_demand: 3.06
+      spot: 0.92
+    Standard_NC4as_T4_v3:
+      vcpu: 4
+      memory_gb: 28
+      gpu: "T4"
+      on_demand: 0.53
+      spot: 0.16
+    Standard_ND96asr_v4:
+      vcpu: 96
+      memory_gb: 900
+      gpu: "A100"
+      on_demand: 27.20
+      spot: 8.16
+
+# Tier mapping for job sizing
+tiers:
+  small:
+    description: "Small datasets, simple models (<1M parameters)"
+    min_vcpu: 4
+    min_memory_gb: 14
+    gpu_required: false
+    estimated_hours: 0.5
+  medium:
+    description: "Medium datasets, moderate models (1M-100M parameters)"
+    min_vcpu: 8
+    min_memory_gb: 30
+    gpu_required: false
+    estimated_hours: 2.0
+  large:
+    description: "Large datasets, deep learning (100M+ parameters)"
+    min_vcpu: 8
+    min_memory_gb: 60
+    gpu_required: true
+    estimated_hours: 8.0
+  gpu_intensive:
+    description: "GPU-heavy training (LLMs, vision transformers)"
+    min_vcpu: 8
+    min_memory_gb: 60
+    gpu_required: true
+    estimated_hours: 24.0
